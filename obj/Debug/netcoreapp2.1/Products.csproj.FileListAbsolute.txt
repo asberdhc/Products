@@ -3,7 +3,6 @@ C:\Users\Curso\source\repos\Products\bin\Debug\netcoreapp2.1\Products.runtimecon
 C:\Users\Curso\source\repos\Products\bin\Debug\netcoreapp2.1\Products.runtimeconfig.dev.json
 C:\Users\Curso\source\repos\Products\bin\Debug\netcoreapp2.1\Products.dll
 C:\Users\Curso\source\repos\Products\bin\Debug\netcoreapp2.1\Products.pdb
-C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.csprojAssemblyReference.cache
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.csproj.CoreCompileInputs.cache
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.RazorAssemblyInfo.cache
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.RazorAssemblyInfo.cs
@@ -12,6 +11,8 @@ C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.AssemblyIn
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.RazorTargetAssemblyInfo.cache
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.dll
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.pdb
-C:\Users\Curso\source\repos\Products\bin\Debug\netcoreapp2.1\AcademyLog.dll
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.csproj.CopyComplete
 C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
+C:\Users\Curso\source\repos\Products\bin\Debug\netcoreapp2.1\Log.dll
+C:\Users\Curso\source\repos\Products\bin\Debug\netcoreapp2.1\Log.pdb
+C:\Users\Curso\source\repos\Products\obj\Debug\netcoreapp2.1\Products.csprojAssemblyReference.cache

@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="AcademyLog">
-      <HintPath>AcademyLog.dll</HintPath>
+    <Reference Include="Log">
+      <HintPath>..\Log\Log\bin\Debug\netcoreapp2.1\publish\Log.dll</HintPath>
     </Reference>
   </ItemGroup>
 

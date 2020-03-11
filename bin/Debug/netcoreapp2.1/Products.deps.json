@@ -30,7 +30,7 @@
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.4.10",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.9",
           "Swashbuckle.AspNetCore": "5.0.0",
-          "AcademyLog": "1.0.0.0"
+          "Log": "1.0.0.0"
         },
         "runtime": {
           "Products.dll": {}
@@ -634,15 +634,15 @@
           "lib/netstandard2.0/System.Text.Json.dll": {}
         }
       },
-      "AcademyLog/1.0.0.0": {
+      "Log/1.0.0.0": {
         "runtime": {
-          "AcademyLog.dll": {
+          "Log.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
         },
         "compile": {
-          "AcademyLog.dll": {}
+          "Log.dll": {}
         }
       },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -3840,7 +3840,7 @@
       "path": "system.text.json/4.6.0",
       "hashPath": "system.text.json.4.6.0.nupkg.sha512"
     },
-    "AcademyLog/1.0.0.0": {
+    "Log/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

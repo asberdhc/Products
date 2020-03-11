@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -16,35 +17,63 @@ namespace Products.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private DataProductsContext db = new DataProductsContext();
+        private DataProductsContext db;
         string URL;
+
+        public ProductsController()
+        {
+            db = new DataProductsContext();
+        }
+
+        public ProductsController(DataProductsContext db)
+        {
+            this.db = db;
+        }
+
+        /// <summary>
+        /// Returns a URL of an Image depending on the given string. If there is no results
+        /// then the method returns a random Image
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>String URL of a web Image server</returns>
         private string RandomImageForProduct(string name)
         {
-            string ApiUrl = "https://api.unsplash.com/search/photos?query=" + name + "&client_id=RR8zTp6LTR2TmVYodb76GyD0Z5SaXaGUoYxX3lr4TJg";
-            var request = (HttpWebRequest)WebRequest.Create(ApiUrl);
-            var content = string.Empty;
-            using (var response = (HttpWebResponse)request.GetResponse())
+            try
             {
-                using (var stream = response.GetResponseStream())
+                string ApiUrl = "https://api.unsplash.com/search/photos?query=" + name + "&client_id=RR8zTp6LTR2TmVYodb76GyD0Z5SaXaGUoYxX3lr4TJg";
+                var request = (HttpWebRequest)WebRequest.Create(ApiUrl);
+                var content = string.Empty;
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    using (var sr = new StreamReader(stream))
+                    using (var stream = response.GetResponseStream())
                     {
-                        content = sr.ReadToEnd();
+                        using (var sr = new StreamReader(stream))
+                        {
+                            content = sr.ReadToEnd();
+                        }
                     }
                 }
-            }
-            JObject objs = JObject.Parse(content);
-            int c = (Int32)objs["total"];
-            if (c >= 1)
-            {
-                URL = objs["results"][0]["urls"]["small"].ToString();
-            }
-            else
-            {
-                URL = RandomImageForProduct("random");
-            }
+                JObject objs = JObject.Parse(content);
+                int c = (Int32)objs["total"];
+                if (c >= 1)
+                {
+                    URL = objs["results"][0]["urls"]["small"].ToString();
+                }
+                else
+                {
+                    URL = RandomImageForProduct("random");
+                }
 
-            return URL;
+                return URL;
+            }
+            catch (WebException e)
+            {
+                return "https://images.unsplash.com/photo-1581338819396-3153302d7cd0?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjExNjU4M30";
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         //GET api/products/{id}
@@ -71,12 +100,12 @@ namespace Products.Controllers
                     return NotFound();
                 }
 
-                new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
-                {
-                    aplicacion = "Products API: GetByID",
-                    mensaje = id + " Product look up by user",
-                    fecha = DateTime.Now
-                });
+                //new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
+                //{
+                //    aplicacion = "Products API: GetByID",
+                //    mensaje = id + " Product look up by user",
+                //    fecha = DateTime.Now
+                //});
                 return Ok(productById);
             }
             catch (Exception)
@@ -114,6 +143,8 @@ namespace Products.Controllers
         {
             try
             {
+                //Log.Log.LogToDB("","", DateTime.Now);
+
                 //obtaining the number of pages
                 int NumPages = 0;
                 int products = db.Products.Count(p => p.IsEnabled == true);
@@ -141,7 +172,8 @@ namespace Products.Controllers
                     Price = p.PriceClient,
                     Image = db.ImagesProduct.FirstOrDefault(i => i.IdImageProduct == p.Id).Decription
 
-                });
+                })
+                .ToList();
 
 
                 //validate that there are products available
@@ -150,17 +182,18 @@ namespace Products.Controllers
                     return NotFound();
                 }
 
-                new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
-                {
-                    aplicacion = "Products API: GetAll",
-                    mensaje = " User Consult All Products ",
-                    fecha = DateTime.Now
-                });
+                //new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
+                //{
+                //    aplicacion = "Products API: GetAll",
+                //    mensaje = " User Consult All Products ",
+                //    fecha = DateTime.Now
+                //});
 
                 return Ok(prod);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -181,19 +214,20 @@ namespace Products.Controllers
                         Description = p.Description,
                         Price = p.PriceClient,
                         Image = db.ImagesProduct.FirstOrDefault(i => i.IdImageProduct == p.Id).Decription
-                    });
+                    })
+                    .ToList();
 
                 if (productByName.Count() == 0)
                 {
                     return NotFound();
                 }
 
-                new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
-                {
-                    aplicacion = "Products API: GetByName",
-                    mensaje = name + " Product look up by user",
-                    fecha = DateTime.Now
-                });
+                //new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
+                //{
+                //    aplicacion = "Products API: GetByName",
+                //    mensaje = name + " Product look up by user",
+                //    fecha = DateTime.Now
+                //});
 
                 return Ok(productByName);
             }
@@ -238,19 +272,17 @@ namespace Products.Controllers
                 db.SaveChanges();
 
                 //Log
-                new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
-                {
-                    aplicacion = "Products API: Add",
-                    mensaje = " User Insert Products " + newProd.Id,
-                    fecha = DateTime.Now
-                });
+                //new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
+                //{
+                //    aplicacion = "Products API: Add",
+                //    mensaje = " User Insert Products " + newProd.Id,
+                //    fecha = DateTime.Now
+                //});
 
                 prod.Image = newImage.Decription;
                 prod.IdProduct = newProd.Id;
                 return Ok(prod);
             }
-
-
             catch (Exception e)
             {
                 return BadRequest("Product  not inserted on DB error: " + e.ToString());
@@ -295,12 +327,12 @@ namespace Products.Controllers
                 //return the updated ProductDTO
                 prod.IdProduct = id;
 
-                new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
-                {
-                    aplicacion = "Products API: Update",
-                    mensaje = " User modified a Product" + id,
-                    fecha = DateTime.Now
-                });
+                //new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
+                //{
+                //    aplicacion = "Products API: Update",
+                //    mensaje = " User modified a Product" + id,
+                //    fecha = DateTime.Now
+                //});
 
                 return Ok(prod);
             }
@@ -331,12 +363,12 @@ namespace Products.Controllers
 
                 db.SaveChanges();
 
-                new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
-                {
-                    aplicacion = "Products API: Delete",
-                    mensaje = $" Product {id} Was Deleted",
-                    fecha = DateTime.Now
-                });
+                //new AcademyLog.Log().ConnectToWebAPI(new AcademyLog.LogEntity
+                //{
+                //    aplicacion = "Products API: Delete",
+                //    mensaje = $" Product {id} Was Deleted",
+                //    fecha = DateTime.Now
+                //});
 
                 return Ok();
             }
